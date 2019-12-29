@@ -2,6 +2,8 @@
 #let 1 represent a live cell and 0 represent a dead cell
 #enter a game of life as an n x m numpy array
 import numpy as np
+import pygame, sys
+from pygame.locals import *
 
 seed = np.array([
         [1,0,1,0,0,0,1,0],
@@ -105,7 +107,35 @@ def nextState(gameboard):
 
     return newboard
 
-for i in range(10):
-    print(seed)
-    seed = nextState(seed)
-    print("\n")
+def renderArray(gameboard, display):
+    WHITE=(255,255,255)
+    BLACK=(0,0,0)
+    for i in range(np.size(gameboard,0)):
+        for j in range(np.size(gameboard,1)):
+            if gameboard[i,j] == 1:
+                pygame.draw.rect(display,WHITE,(i*50,j*50,50,50))
+            else:
+                pygame.draw.rect(display,BLACK,(i*50,j*50,50,50))
+
+def renderGameOfLife(seed):
+    pygame.init()
+    display = pygame.display.set_mode((400, 300))
+    pygame.display.set_caption('Game of life animation')
+    WHITE=(255,255,255)
+
+    while True: # main game loop
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+
+        # Draw game board
+        for i in range(10):
+            renderArray(seed,display)
+            seed = nextState(seed)
+            pygame.time.delay(1000)
+            pygame.display.update()
+
+
+
+renderGameOfLife(seed)
