@@ -1,20 +1,24 @@
-#Game of life
-#let 1 represent a live cell and 0 represent a dead cell
-#enter a game of life as an n x m numpy array
+# Game of life
+# let 1 represent a live cell and 0 represent a dead cell
+# enter a game of life as an n x m numpy array
 import numpy as np
 import pygame, sys
 from pygame.locals import *
 
-seed = np.array([
-        [1,0,1,0,0,0,1,0],
-        [0,0,1,0,0,0,1,0],
-        [1,0,1,0,0,0,1,0],
-        [1,0,0,1,0,0,1,0],
-        [0,0,1,0,0,0,1,0],
-        [0,0,1,0,0,0,1,0],
-        ])
+# Initial State
+seed = np.array([[0,0,0],
+                [0,0,0],
+                [0,0,0]])
+#seed = np.array([
+        # [1,0,1,0,0,0,1,0],
+        # [0,0,1,0,0,0,1,0],
+        # [1,0,1,0,0,0,1,0],
+        # [1,0,0,1,0,0,1,0],
+        # [0,0,1,0,0,0,1,0],
+        # [0,0,1,0,0,0,1,0],
+        # ])
 
-#A function to check if scenario 0 applies
+# A function to check if scenario 0 applies
 def isNoInteraction(gameboard):
     if np.count_nonzero(gameboard) == 0:
         return True
@@ -131,10 +135,19 @@ def renderGameOfLife(seed):
 
         # Draw game board
         for i in range(10):
-            renderArray(seed,display)
-            seed = nextState(seed)
-            pygame.time.delay(1000)
-            pygame.display.update()
+            if isNoInteraction(seed):
+                font = pygame.font.SysFont("Comic Sans MS", 30)
+                text_surface = font.render("No interactions", 1, (255,255,255))
+                display.blit(text_surface, (0,0))
+                pygame.time.delay(1000)
+                pygame.display.update()
+                pygame.quit()
+                sys.exit()
+            else:
+                renderArray(seed,display)
+                seed = nextState(seed)
+                pygame.time.delay(1000)
+                pygame.display.update()
 
 
 
