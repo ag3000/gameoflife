@@ -4,41 +4,7 @@
 import numpy as np
 import pygame, sys
 from pygame.locals import *
-
-# A function to check if scenario 0 applies
-def isNoInteraction(gameboard):
-    if np.count_nonzero(gameboard) == 0:
-        return True
-    else:
-        return False
-
-# scenario 1
-def underPopulation(numberOfNeighbours):
-    if numberOfNeighbours < 2:
-        return True
-    else:
-        return False
-
-# scenario 2
-def overCrowding(numberOfNeighbours):
-    if numberOfNeighbours > 3:
-        return True
-    else:
-        return False
-
-# scenario 3
-def survival(numberOfNeighbours):
-    if numberOfNeighbours == 2 or numberOfNeighbours == 3:
-        return True
-    else:
-        return False
-
-# scenario 4
-def creationOfLife(numberOfNeighbours):
-    if numberOfNeighbours == 3:
-        return True
-    else:
-        return False
+import scenarios
 
 # If the neighbouring cell is 1 then add 1 to the counter
 def addNeighbour(neighbouringCell, numberOfNeighbours):
@@ -84,12 +50,12 @@ def calcNewCellState(i, j, gameboard):
     numberOfNeighbours = calcNumberOfNeighbours(i, j, gameboard)
 
     if gameboard[i, j] == 1:
-        if underPopulation(numberOfNeighbours) or overCrowding(numberOfNeighbours) or not survival(numberOfNeighbours):
+        if scenarios.underPopulation(numberOfNeighbours) or scenarios.overCrowding(numberOfNeighbours) or not scenarios.survival(numberOfNeighbours):
             newState = 0
         else:
             newState = 1
     else:
-        if creationOfLife(numberOfNeighbours):
+        if scenarios.creationOfLife(numberOfNeighbours):
             newState = 1
         else:
             newState = 0
@@ -139,12 +105,13 @@ def renderGameOfLife(seed, numberOfIterations):
 
     # Draw game board
     for i in range(numberOfIterations):
-        if isNoInteraction(seed):
+        if scenarios.isNoInteraction(seed):
+            renderArray(seed,display)
             font = pygame.font.Font(None, 36)
             text_surface = font.render("No interactions", 1, (255, 255, 255))
             display.blit(text_surface, (0, 0))
-            pygame.time.delay(3000)
             pygame.display.update()
+            pygame.time.delay(3000)
             pygame.display.quit()
             pygame.quit()
             sys.exit()
@@ -173,7 +140,7 @@ def main():
             [0,0,1,0,0,0,1,0],
             ])
 
-    renderGameOfLife(seed, 10)
+    renderGameOfLife(seed, 15)
 
 if __name__ == "__main__":
     main()
