@@ -1,6 +1,3 @@
-# Game of life
-# let 1 represent a live cell and 0 represent a dead cell
-# enter a game of life as an n x m numpy array
 import numpy as np
 import pygame, sys
 from pygame.locals import *
@@ -27,10 +24,10 @@ def calcNumberOfNeighbours(i, j, gameboard):
         # Count southwestern neighbour
         if j > 0:
             numberOfNeighbours = addNeighbour(gameboard[i+1, j-1], numberOfNeighbours)
-    # Count west neighbour
+    # Count western neighbour
     if j > 0:
         numberOfNeighbours = addNeighbour(gameboard[i, j-1], numberOfNeighbours)
-    # Count east neighbour
+    # Count eastern neighbour
     if j < numberOfColumns - 1:
         numberOfNeighbours = addNeighbour(gameboard[i, j+1], numberOfNeighbours)
     # Count northern neighbour
@@ -64,10 +61,12 @@ def calcNewCellState(i, j, gameboard):
 
 # Returns the next step in the game of life by iterating through each cell
 def nextState(gameboard):
-    newboard = np.zeros((np.size(gameboard, 0), np.size(gameboard, 1)), dtype = int)
+    numberOfRows = np.size(gameboard,0)
+    numberOfColumns = np.size(gameboard,1)
+    newboard = np.zeros((numberOfRows, numberOfColumns), dtype = int)
     # Iterate through array
-    for i in range(np.size(gameboard, 0)):
-        for j in range(np.size(gameboard, 1)):
+    for i in range(numberOfRows):
+        for j in range(numberOfColumns):
             newboard[i, j] = calcNewCellState(i, j, gameboard)
 
     return newboard
@@ -116,18 +115,19 @@ def renderGameOfLife(seed, numberOfIterations):
             pygame.quit()
             sys.exit()
             return
+
+        # close game when user quits
+        elif pygame.event.peek(eventtype = QUIT):
+            pygame.display.quit()
+            pygame.quit()
+            sys.exit()
+
         else:
             renderArray(seed,display)
             seed = nextState(seed)
             pygame.time.delay(1000)
             pygame.display.update()
 
-    while True: # close game when user quits
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.display.quit()
-                pygame.quit()
-                sys.exit()
 
 def main():
     # Initial State
